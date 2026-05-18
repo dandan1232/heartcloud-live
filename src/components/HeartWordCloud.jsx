@@ -43,7 +43,7 @@ function createHeartMaskImage(width, height) {
 
   const heartWidth = bounds.maxX - bounds.minX;
   const heartHeight = bounds.maxY - bounds.minY;
-  const scale = Math.min(width * 0.86 / heartWidth, height * 0.86 / heartHeight);
+  const scale = Math.min(width * 0.96 / heartWidth, height * 0.96 / heartHeight);
   const offsetX = (width - heartWidth * scale) / 2 - bounds.minX * scale;
   const offsetY = (height - heartHeight * scale) / 2 - bounds.minY * scale;
 
@@ -111,12 +111,13 @@ function HeartWordCloud({ data }) {
         maskImage: maskImageRef.current,
         left: 'center',
         top: 'center',
-        width: '90%',
-        height: '90%',
-        sizeRange: [16, 66],
+        width: '96%',
+        height: '96%',
+        sizeRange: [14, 56],
         rotationRange: [-10, 10],
         rotationStep: 15,
         gridSize: 4,
+        padding: 3,
         drawOutOfBound: false,
         shrinkToFit: true,
         keepAspect: true,
