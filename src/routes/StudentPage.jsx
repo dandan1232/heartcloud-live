@@ -30,7 +30,7 @@ function StudentPage() {
       setMessage({ type: 'success', text: 'Submitted successfully.' });
       setWord('');
     } catch (error) {
-      setMessage({ type: 'error', text: 'Submission failed. Please try again.' });
+      setMessage({ type: 'error', text: error.message || 'Submission failed. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -38,8 +38,7 @@ function StudentPage() {
 
   return (
     <div className="student-page">
-      <h1>💝 HeartCloud Live</h1>
-      <p className="subtitle">Enter your word to join the word cloud</p>
+      <p className="subtitle">Type your answer in the blank</p>
 
       <form className="input-container" onSubmit={handleSubmit}>
         <input

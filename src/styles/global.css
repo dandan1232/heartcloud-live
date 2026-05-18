@@ -216,6 +216,30 @@ body {
   box-shadow: 0 6px 20px rgba(255, 149, 0, 0.5);
 }
 
+.screen-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.clear-btn {
+  padding: 10px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #ff3b30 0%, #ff6b6b 100%);
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 59, 48, 0.4);
+}
+
+.clear-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 59, 48, 0.5);
+}
+
 .wordcloud-container {
   flex: 1;
   display: flex;

@@ -6,7 +6,8 @@ import {
   fetchPages,
   fetchSubmissions,
   createNewPage,
-  switchPage
+  switchPage,
+  clearPage
 } from '../lib/realtime';
 import { calculateWordFrequency } from '../lib/wordUtils';
 
@@ -56,6 +57,12 @@ function ScreenPage() {
     }
   }, []);
 
+  const handlePageCleared = useCallback((data) => {
+    if (data.page_id === activePageIdRef.current) {
+      setSubmissions([]);
+    }
+  }, []);
+
   useEffect(() => {
     const initData = async () => {
       try {
@@ -83,11 +90,13 @@ function ScreenPage() {
     wsClient.on('new_submission', handleNewSubmission);
     wsClient.on('page_changed', handlePageChanged);
     wsClient.on('init', handleInit);
+    wsClient.on('page_cleared', handlePageCleared);
 
     return () => {
       wsClient.off('new_submission', handleNewSubmission);
       wsClient.off('page_changed', handlePageChanged);
       wsClient.off('init', handleInit);
+      wsClient.off('page_cleared', handlePageCleared);
     };
   }, []);
 
@@ -119,6 +128,14 @@ function ScreenPage() {
     }
   };
 
+  const handleClearPage = async () => {
+    try {
+      await clearPage();
+    } catch (error) {
+      console.error('Failed to clear page:', error);
+    }
+  };
+
   const activePage = pages.find(p => p.id === activePageId);
   const totalSubmissions = submissions.length;
   const uniqueWords = new Set(submissions.map(s => s.word)).size;
@@ -143,9 +160,14 @@ function ScreenPage() {
           </div>
         </div>
 
-        <button className="new-page-btn" onClick={handleNewPage}>
-          + New Page
-        </button>
+        <div className="screen-actions">
+          <button className="new-page-btn" onClick={handleNewPage}>
+            + New Page
+          </button>
+          <button className="clear-btn" onClick={handleClearPage}>
+            Clear
+          </button>
+        </div>
       </div>
 
       <div className="page-tabs">

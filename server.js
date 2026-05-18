@@ -58,10 +58,12 @@ app.get('/api/submissions/:pageId', (req, res) => {
 app.post('/api/submit', (req, res) => {
   const { word } = req.body;
   const room = rooms.get('default');
+  const activePageId = room.active_page_id;
+
   const submission = {
     id: Date.now().toString(),
     room_id: 'default',
-    page_id: room.active_page_id,
+    page_id: activePageId,
     word: word,
     created_at: new Date().toISOString()
   };
@@ -115,6 +117,26 @@ app.post('/api/switch-page', (req, res) => {
   broadcast({
     type: 'page_changed',
     data: { active_page_id: page_id }
+  });
+
+  res.json({ success: true });
+});
+
+// API: 清空当前页面
+app.post('/api/clear', (req, res) => {
+  const room = rooms.get('default');
+  const activePageId = room.active_page_id;
+
+  // 删除当前页面的所有提交
+  for (const [id, submission] of submissions.entries()) {
+    if (submission.page_id === activePageId) {
+      submissions.delete(id);
+    }
+  }
+
+  broadcast({
+    type: 'page_cleared',
+    data: { page_id: activePageId }
   });
 
   res.json({ success: true });

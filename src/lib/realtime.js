@@ -107,3 +107,10 @@ export async function switchPage(pageId) {
   });
   return response.json();
 }
+
+export async function clearPage() {
+  const response = await fetch('/api/clear', {
+    method: 'POST'
+  });
+  return response.json();
+}
