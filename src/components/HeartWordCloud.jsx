@@ -21,27 +21,45 @@ function createHeartMaskImage(width, height) {
   canvas.height = height;
   const ctx = canvas.getContext('2d');
 
-  const centerX = width / 2;
-  const centerY = height / 2;
-  const size = Math.min(width, height) * 0.45;
+  const points = [];
 
+  for (let t = 0; t < Math.PI * 2; t += 0.01) {
+    const x = 16 * Math.pow(Math.sin(t), 3);
+    const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+    points.push({ x, y });
+  }
+
+  const bounds = points.reduce((acc, point) => ({
+    minX: Math.min(acc.minX, point.x),
+    maxX: Math.max(acc.maxX, point.x),
+    minY: Math.min(acc.minY, point.y),
+    maxY: Math.max(acc.maxY, point.y)
+  }), {
+    minX: Infinity,
+    maxX: -Infinity,
+    minY: Infinity,
+    maxY: -Infinity
+  });
+
+  const heartWidth = bounds.maxX - bounds.minX;
+  const heartHeight = bounds.maxY - bounds.minY;
+  const scale = Math.min(width * 0.86 / heartWidth, height * 0.86 / heartHeight);
+  const offsetX = (width - heartWidth * scale) / 2 - bounds.minX * scale;
+  const offsetY = (height - heartHeight * scale) / 2 - bounds.minY * scale;
+
+  ctx.clearRect(0, 0, width, height);
   ctx.beginPath();
-  const topCurveHeight = size * 0.3;
-  ctx.moveTo(centerX, centerY + size * 0.7);
 
-  // 左半边
-  ctx.bezierCurveTo(
-    centerX - size * 0.7, centerY + size * 0.4,
-    centerX - size * 0.7, centerY - topCurveHeight,
-    centerX, centerY - topCurveHeight
-  );
+  points.forEach((point, index) => {
+    const drawX = offsetX + point.x * scale;
+    const drawY = offsetY + point.y * scale;
 
-  // 右半边
-  ctx.bezierCurveTo(
-    centerX + size * 0.7, centerY - topCurveHeight,
-    centerX + size * 0.7, centerY + size * 0.4,
-    centerX, centerY + size * 0.7
-  );
+    if (index === 0) {
+      ctx.moveTo(drawX, drawY);
+    } else {
+      ctx.lineTo(drawX, drawY);
+    }
+  });
 
   ctx.closePath();
   ctx.fillStyle = '#000';
@@ -95,11 +113,13 @@ function HeartWordCloud({ data }) {
         top: 'center',
         width: '90%',
         height: '90%',
-        sizeRange: [20, 90],
-        rotationRange: [-15, 15],
+        sizeRange: [16, 66],
+        rotationRange: [-10, 10],
         rotationStep: 15,
-        gridSize: 8,
+        gridSize: 4,
         drawOutOfBound: false,
+        shrinkToFit: true,
+        keepAspect: true,
         layoutAnimation: true,
         textStyle: {
           fontFamily: 'sans-serif',

@@ -30,7 +30,10 @@ function ScreenPage() {
 
   const handleNewSubmission = useCallback((submission) => {
     if (submission.page_id === activePageIdRef.current) {
-      setSubmissions(prev => [...prev, submission]);
+      setSubmissions(prev => {
+        if (prev.some(item => item.id === submission.id)) return prev;
+        return [...prev, submission];
+      });
     }
   }, []);
 
@@ -97,6 +100,7 @@ function ScreenPage() {
       wsClient.off('page_changed', handlePageChanged);
       wsClient.off('init', handleInit);
       wsClient.off('page_cleared', handlePageCleared);
+      wsClient.disconnect();
     };
   }, []);
 
@@ -143,7 +147,7 @@ function ScreenPage() {
   return (
     <div className="screen-page">
       <div className="screen-header">
-        <h1 className="screen-title">💝 HeartCloud Live</h1>
+        <h1 className="screen-title">Welcome to our class</h1>
 
         <div className="screen-stats">
           <div className="stat-item">
