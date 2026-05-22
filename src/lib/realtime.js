@@ -108,7 +108,11 @@ export async function submitWord(word) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ word })
   });
-  return response.json();
+  const result = await response.json();
+  if (!response.ok || result.success === false) {
+    throw new Error(result.error || '提交失败，请重试。');
+  }
+  return result;
 }
 
 export async function createNewPage() {

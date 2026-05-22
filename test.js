@@ -1,9 +1,9 @@
 const words = [
-  "Love", "Heart", "AI", "Future", "Robot", "Happy", "Dream", "Hope", "Peace", "Joy",
-  "Star", "Sun", "Moon", "Sky", "Sea", "Tree", "Flower", "Music", "Art", "Code",
-  "Data", "Cloud", "World", "Life", "Soul", "Fire", "Wind", "Rain", "Snow", "Light",
-  "Time", "Space", "Mind", "Power", "Grace", "Faith", "Trust", "Courage", "Wisdom", "Truth",
-  "Beauty", "Magic", "Wonder", "Smile", "Laugh", "Dance", "Sing", "Play", "Build", "Create"
+  "爱", "心", "未来", "机器人", "快乐", "梦想", "希望", "和平", "喜悦", "星星",
+  "太阳", "月亮", "天空", "大海", "树木", "花朵", "音乐", "艺术", "代码", "数据",
+  "云朵", "世界", "生活", "灵魂", "火焰", "微风", "雨水", "白雪", "光芒", "时间",
+  "空间", "思想", "力量", "优雅", "信任", "勇气", "智慧", "真理", "美丽", "奇妙",
+  "惊喜", "微笑", "欢笑", "舞蹈", "歌唱", "玩耍", "建造", "创造", "课堂", "成长"
 ];
 
 async function submitWord(word) {
@@ -16,7 +16,7 @@ async function submitWord(word) {
 }
 
 async function runTest() {
-  console.log("开始测试，提交50个不同的单词...\n");
+  console.log("开始测试，提交50个不同的中文词语...\n");
 
   let successCount = 0;
   let failCount = 0;
@@ -39,8 +39,8 @@ async function runTest() {
   }
 
   console.log("\n测试完成！");
-  console.log(`成功: ${successCount} 个单词`);
-  console.log(`失败: ${failCount} 个单词`);
+  console.log(`成功: ${successCount} 个中文词语`);
+  console.log(`失败: ${failCount} 个中文词语`);
   console.log("\n请查看大屏页面 http://localhost:5173/screen 的词云效果。");
 }
 

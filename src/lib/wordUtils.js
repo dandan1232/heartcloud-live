@@ -18,16 +18,23 @@ export function calculateWordFrequency(submissions) {
 
 export function validateWord(word) {
   if (!word || word.length === 0) {
-    return { valid: false, message: 'Please enter a word' };
+    return { valid: false, message: '请输入中文词语' };
   }
 
-  if (word.length > 15) {
-    return { valid: false, message: 'Only English letters, max 15 characters.' };
+  if (Array.from(word).length > 15) {
+    return { valid: false, message: '仅支持中文，最多15个字。' };
   }
 
-  if (!/^[A-Za-z]+$/.test(word)) {
-    return { valid: false, message: 'Only English letters, max 15 characters.' };
+  if (!/^\p{Script=Han}+$/u.test(word)) {
+    return { valid: false, message: '仅支持中文，最多15个字。' };
   }
 
   return { valid: true };
+}
+
+export function sanitizeChineseInput(value) {
+  return Array.from(value)
+    .filter(char => /\p{Script=Han}/u.test(char))
+    .slice(0, 15)
+    .join('');
 }

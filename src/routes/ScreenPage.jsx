@@ -147,29 +147,29 @@ function ScreenPage() {
   return (
     <div className="screen-page">
       <div className="screen-header">
-        <h1 className="screen-title">Welcome to our class</h1>
+        <h1 className="screen-title">欢迎来到我们的课堂</h1>
 
         <div className="screen-stats">
           <div className="stat-item">
-            <div className="stat-label">Current Page</div>
-            <div className="stat-value">Page {activePage?.page_no || 1}</div>
+            <div className="stat-label">当前页面</div>
+            <div className="stat-value">第 {activePage?.page_no || 1} 页</div>
           </div>
           <div className="stat-item">
-            <div className="stat-label">Total Submissions</div>
+            <div className="stat-label">提交总数</div>
             <div className="stat-value">{totalSubmissions}</div>
           </div>
           <div className="stat-item">
-            <div className="stat-label">Unique Words</div>
+            <div className="stat-label">不同词语</div>
             <div className="stat-value">{uniqueWords}</div>
           </div>
         </div>
 
         <div className="screen-actions">
           <button className="new-page-btn" onClick={handleNewPage}>
-            + New Page
+            + 新建页面
           </button>
           <button className="clear-btn" onClick={handleClearPage}>
-            Clear
+            清空
           </button>
         </div>
       </div>
@@ -181,7 +181,7 @@ function ScreenPage() {
             className={`page-tab ${page.id === activePageId ? 'active' : ''}`}
             onClick={() => handleSwitchPage(page.id)}
           >
-            Page {page.page_no}
+            第 {page.page_no} 页
           </button>
         ))}
       </div>
@@ -191,7 +191,7 @@ function ScreenPage() {
           <HeartWordCloud data={wordCloudData} />
         ) : (
           <div className="wordcloud-empty">
-            Waiting for submissions...
+            等待学生提交...
           </div>
         )}
       </div>

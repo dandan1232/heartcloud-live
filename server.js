@@ -2,6 +2,7 @@ import express from 'express';
 import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import cors from 'cors';
+import { validateWord } from './src/lib/wordUtils.js';
 
 const app = express();
 const server = createServer(app);
@@ -57,6 +58,13 @@ app.get('/api/submissions/:pageId', (req, res) => {
 // API: 提交单词
 app.post('/api/submit', (req, res) => {
   const { word } = req.body;
+  const submittedWord = typeof word === 'string' ? word.trim() : '';
+  const validation = validateWord(submittedWord);
+
+  if (!validation.valid) {
+    return res.status(400).json({ success: false, error: validation.message });
+  }
+
   const room = rooms.get('default');
   const activePageId = room.active_page_id;
 
@@ -64,7 +72,7 @@ app.post('/api/submit', (req, res) => {
     id: Date.now().toString(),
     room_id: 'default',
     page_id: activePageId,
-    word: word,
+    word: submittedWord,
     created_at: new Date().toISOString()
   };
   submissions.set(submission.id, submission);

@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 import { submitWord } from '../lib/realtime';
-import { validateWord } from '../lib/wordUtils';
+import { sanitizeChineseInput, validateWord } from '../lib/wordUtils';
 
 function StudentPage() {
   const [word, setWord] = useState('');
   const [message, setMessage] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
-    // 只允许输入英文字符
-    if (/^[A-Za-z]*$/.test(value) && value.length <= 15) {
+    if (isComposing || e.nativeEvent.isComposing) {
       setWord(value);
+      return;
     }
+
+    setWord(sanitizeChineseInput(value));
+  };
+
+  const handleCompositionEnd = (e) => {
+    setIsComposing(false);
+    setWord(sanitizeChineseInput(e.target.value));
   };
 
   const handleSubmit = async (e) => {
@@ -27,10 +35,10 @@ function StudentPage() {
     setIsSubmitting(true);
     try {
       await submitWord(word);
-      setMessage({ type: 'success', text: 'Submitted successfully.' });
+      setMessage({ type: 'success', text: '提交成功。' });
       setWord('');
     } catch (error) {
-      setMessage({ type: 'error', text: error.message || 'Submission failed. Please try again.' });
+      setMessage({ type: 'error', text: error.message || '提交失败，请重试。' });
     } finally {
       setIsSubmitting(false);
     }
@@ -38,7 +46,7 @@ function StudentPage() {
 
   return (
     <div className="student-page">
-      <p className="subtitle">Type your answer in the blank</p>
+      <p className="subtitle">请在空格中输入你的答案</p>
 
       <form className="input-container" onSubmit={handleSubmit}>
         <input
@@ -46,7 +54,9 @@ function StudentPage() {
           className="word-input"
           value={word}
           onChange={handleInputChange}
-          placeholder="Enter English word"
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={handleCompositionEnd}
+          placeholder="请输入中文词语"
           maxLength={15}
           autoComplete="off"
           autoFocus
@@ -56,7 +66,7 @@ function StudentPage() {
           className="submit-btn"
           disabled={isSubmitting || !word.trim()}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit'}
+          {isSubmitting ? '提交中...' : '提交'}
         </button>
       </form>
 
